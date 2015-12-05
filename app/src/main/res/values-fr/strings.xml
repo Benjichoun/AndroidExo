@@ -2,5 +2,5 @@
 <resources>
     <string name="app_name">Notre application</string>
     <string name="action_settings">Réglages</string>
-    <string name="button_text">Clique</string>
+    <string name="button_text">Afficher toutes les bières</string>
 </resources>

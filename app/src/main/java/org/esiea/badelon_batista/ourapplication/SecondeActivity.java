@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -23,13 +25,9 @@ import java.io.InputStream;
 public class SecondeActivity extends AppCompatActivity {
 
     public static final String BIERS_UPDATE = "com.octip.cours.inf4042_12.BIERS_UPDATE";
-    public class BierUpdate extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("Test", "BroadCast BierUpdate receive");
-            //((BiersAdapter)rv.getAdapter()).setNewBiere(getBiersFromFile());
-        }
-    }
+    private RecyclerView rv;
+    private RecyclerView.Adapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +47,24 @@ public class SecondeActivity extends AppCompatActivity {
         GetBiersServices.startActionBiers(this);
         IntentFilter intentFilter = new IntentFilter(BIERS_UPDATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(new BierUpdate(), intentFilter);
+        rv = (RecyclerView) findViewById(R.id.rv_bier);
+        rv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        mAdapter = new BiersAdapter(getBiersFromFile());
+        rv.setAdapter(mAdapter);
+
+
 
 
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
 
+
+
+
+    }
 
     public JSONArray getBiersFromFile(){
         try {
@@ -68,6 +79,14 @@ public class SecondeActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
             return new JSONArray();
+        }
+    }
+
+    public class BierUpdate extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Test", "BroadCast BierUpdate receive");
+            ((BiersAdapter)rv.getAdapter()).setNewBiere(getBiersFromFile());
         }
     }
 
